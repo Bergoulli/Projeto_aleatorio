@@ -12,6 +12,14 @@ class Relatorio:
         self.root.title('Relatório de Instalações')
         self.root.geometry('1440x850+0+0')
 
+
+        self.Nomeprojeto=StringVar()
+        self.Responsavel=StringVar()
+        self.Email=StringVar()
+        self.Telefone=StringVar()
+        self.Cliente=StringVar()
+        self.Data=StringVar()
+
         lbltitle = Label(self.root, bd=20, relief=RIDGE, text='RELATÓRIO DE INSTALAÇÕES', fg='red', bg='white', font=('times new roman', 30, 'bold'))
         lbltitle.pack(side=TOP, fill=X)
 
@@ -77,7 +85,7 @@ class Relatorio:
 
         Lblnameclient=Label(Dataframeleft, font=('times new roman',12, 'bold'), text='Cliente', padx=2, pady=6)
         Lblnameclient.grid(row=0, column=0, sticky=W)
-        textnameclient=Entry(Dataframeleft, font=('times new roman',12), width=35)
+        textnameclient=Entry(Dataframeleft, font=('times new roman',12), textvariable=self.Cliente, width=35)
         textnameclient.grid(row=0, column=1)
 
         Lblcnpgclient=Label(Dataframeleft, font=('times new roman',12, 'bold'), text='CNPJ/CPF', padx=2, pady=6)
@@ -92,12 +100,12 @@ class Relatorio:
 
         Lbltelefclient=Label(Dataframeleft, font=('times new roman',12, 'bold'), text='Número de telefone', padx=2, pady=6)
         Lbltelefclient.grid(row=1, column=7, sticky=W)
-        texttelefclient=Entry(Dataframeleft, font=('times new roman',12), width=35)
+        texttelefclient=Entry(Dataframeleft, font=('times new roman',12), textvariable=self.Telefone, width=35)
         texttelefclient.grid(row=1, column=8)
 
         Lblemailclient=Label(Dataframeleft, font=('times new roman',12, 'bold'), text='E-mail', padx=2, pady=6)
         Lblemailclient.grid(row=2, column=0, sticky=W)
-        textemailclient=Entry(Dataframeleft, font=('times new roman',12), width=35)
+        textemailclient=Entry(Dataframeleft, font=('times new roman',12), textvariable=self.Email, width=35)
         textemailclient.grid(row=2, column=1)
 
         Lbltipoclient=Label(Dataframeleft, font=('times new roman',12, 'bold'), text='Nome/empresa', padx=2, pady=6)
@@ -109,17 +117,17 @@ class Relatorio:
 
         Lblprojectclient=Label(Dataframedown, font=('times new roman',12, 'bold'), text='Nome do projeto', padx=2, pady=6)
         Lblprojectclient.grid(row=0, column=0, sticky=W)
-        textprojectclient=Entry(Dataframedown, font=('times new roman',12), width=35)
+        textprojectclient=Entry(Dataframedown, font=('times new roman',12), textvariable=self.Nomeprojeto, width=35)
         textprojectclient.grid(row=0, column=1)
 
         Lbldataclient=Label(Dataframedown, font=('times new roman',12, 'bold'), text='Data/hora', padx=2, pady=6)
         Lbldataclient.grid(row=0, column=7, sticky=W)
-        textdataclient=Entry(Dataframedown, font=('times new roman',12), width=35)
+        textdataclient=Entry(Dataframedown, font=('times new roman',12), textvariable=self.Data, width=35)
         textdataclient.grid(row=0, column=8)
 
         Lblrespclient=Label(Dataframedown, font=('times new roman',12, 'bold'), text='Responsável', padx=2, pady=6)
         Lblrespclient.grid(row=1, column=0, sticky=W)
-        textrespclient=Entry(Dataframedown, font=('times new roman',12), width=35)
+        textrespclient=Entry(Dataframedown, font=('times new roman',12), textvariable=self.Responsavel, width=35)
         textrespclient.grid(row=1, column=1)
 
         #dataframe inspe - inspeção ================================
@@ -212,8 +220,26 @@ class Relatorio:
         self.relatorio_table.heading('Data', text='Data')
 
         self.relatorio_table['show']='headings'
+
+        self.relatorio_table.column('Nomeprojeto', width=100)
+        self.relatorio_table.column('Responsavel', width=100)
+        self.relatorio_table.column('Cliente', width=100)
+        self.relatorio_table.column('Email', width=100)
+        self.relatorio_table.column('Telefone', width=100)
+        self.relatorio_table.column('Data', width=100)
+
         self.relatorio_table.pack(fill=BOTH, expand=1)
 
+
+        #==================funcionando declaration ===============
+
+        def iDescricao(self):
+            if self.Nomeprojeto.get()== '' or self.Cliente.get() == '' or self.Responsavel.get() =='':
+                messagebox.showerror('Error', 'Falta preencher alguma célula')
+            else:
+                conn=mysql.connector.connect(host='localhost', username='root', password='teste@123', database='Mydata')
+                my_cursor=conn.cursor()
+                
 root = Tk()
 ob = Relatorio(root)
 root.mainloop()
