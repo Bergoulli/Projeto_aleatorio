@@ -39,13 +39,39 @@ class Relatorio:
         #=================buttons frame============
 
         Buttonframe = Frame(self.root,bd=10,relief=RIDGE)
-        Buttonframe.place(x=0,y=690, width=1440, height=70)
+        Buttonframe.place(x=0,y=660, width=1440, height=60)
 
-        
+        #======================buttons ====================
+
+        btnpdf=Button(Buttonframe, text='PDF', bg='green', fg='white', font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
+        btnpdf.grid(row=0, column=0)
+
+        btnsair=Button(Buttonframe, text='Sair', bg='green', fg='white', font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
+        btnsair.grid(row=0, column=1)
+
+        btndescri=Button(Buttonframe, text='Descrição', bg='green', fg='white', font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
+        btndescri.grid(row=0, column=2)
+
+        btndescri=Button(Buttonframe, text='Data de Descrip.', bg='green', fg='white', font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
+        btndescri.grid(row=0, column=3)
+
+        btndelete=Button(Buttonframe, text='Deletar', bg='green', fg='white', font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
+        btndelete.grid(row=0, column=4)
+
+        btnlimpar=Button(Buttonframe, text='Limpar', bg='green', fg='white', font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
+        btnlimpar.grid(row=0, column=5)
+
         #=================details============
 
         Detailsframe = Frame(self.root,bd=10,relief=RIDGE)
-        Detailsframe.place(x=0,y=770, width=1440, height=70)
+        Detailsframe.place(x=0,y=720, width=1440, height=120)
+
+        #dataframe left - cliente ================================
+
+        self.txtdescription = Text(Dataframeright, font=('times new roman',12), width=52, height=16, padx=2, pady=6)
+        self.txtdescription.grid(row=0, column=0)
+
+
 
         #dataframe left - cliente ================================
 
@@ -164,6 +190,29 @@ class Relatorio:
         comequipablet['values'] = ('Conforme', 'Não conforme', 'N/A')
         comequipablet.grid(row=0, column=7)
 
+
+        #==================tabela=================================
+
+
+        #=====================scrol======================
+        scroll_x=ttk.Scrollbar(Detailsframe, orient=HORIZONTAL)
+        scroll_y=ttk.Scrollbar(Detailsframe, orient=VERTICAL)
+        self.relatorio_table = ttk.Treeview(Detailsframe, columns=('Nomeprojeto', 'Responsavel', 'Cliente', 'Email', 'Telefone', 'Data'), xscrollcommand=scroll_x.set, yscrollcommand=scroll_y.set)
+        scroll_x.pack(side=BOTTOM, fill=X)
+        scroll_y.pack(side=RIGHT, fill=Y)
+
+        scroll_x=ttk.Scrollbar(command=self.relatorio_table.xview)
+        scroll_y=ttk.Scrollbar(command=self.relatorio_table.yview)
+
+        self.relatorio_table.heading('Nomeprojeto', text='Nome do projeto')
+        self.relatorio_table.heading('Responsavel', text='Responsável')
+        self.relatorio_table.heading('Cliente', text='Cliente')
+        self.relatorio_table.heading('Email', text='E-mail')
+        self.relatorio_table.heading('Telefone', text='Telefone')
+        self.relatorio_table.heading('Data', text='Data')
+
+        self.relatorio_table['show']='headings'
+        self.relatorio_table.pack(fill=BOTH, expand=1)
 
 root = Tk()
 ob = Relatorio(root)
