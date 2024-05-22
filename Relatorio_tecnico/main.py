@@ -18,14 +18,19 @@ class Relatorio:
 
         #"============dataframe============"
         Dataframe=Frame(self.root,bd=10,relief=RIDGE)
-        Dataframe.place(x=0,y=130, width=1440, height=550)
+        Dataframe.place(x=0,y=100, width=1440, height=550)
 
         Dataframeleft = LabelFrame(Dataframe, bd=10, relief=RIDGE, padx=10, 
                                    font=('times new roman', 12, 'bold'), text='Dados do cliente: ')
-        Dataframeleft.place(x=0,y=5, width=930, height=250)
+        Dataframeleft.place(x=0,y=5, width=930, height=150)
+
         Dataframedown = LabelFrame(Dataframe, bd=10, relief=RIDGE, padx=10, 
                                    font=('times new roman', 12, 'bold'), text='Informações da Inspeção: ')
-        Dataframedown.place(x=0,y=270, width=930, height=250)
+        Dataframedown.place(x=0,y=170, width=930, height=120)
+
+        Dataframeinpe = LabelFrame(Dataframe, bd=10, relief=RIDGE, padx=10, 
+                                   font=('times new roman', 12, 'bold'), text='Informações da Inspeção: ')
+        Dataframeinpe.place(x=0,y=300, width=930, height=220)
 
         Dataframeright= LabelFrame(Dataframe, bd=10, relief=RIDGE, padx=10, 
                                    font=('times new roman', 12, 'bold'), text='Descrição: ')
@@ -69,14 +74,95 @@ class Relatorio:
         textemailclient=Entry(Dataframeleft, font=('times new roman',12), width=35)
         textemailclient.grid(row=2, column=1)
 
-        #dataframe left - responsável ================================
+        Lbltipoclient=Label(Dataframeleft, font=('times new roman',12, 'bold'), text='Nome/empresa', padx=2, pady=6)
+        Lbltipoclient.grid(row=2, column=7, sticky=W)
+        texttipoclient=Entry(Dataframeleft, font=('times new roman',12), width=35)
+        texttipoclient.grid(row=2, column=8)
 
-        # lblNametablet = Label(Dataframeleft, text='teste', font=('times new roman',12, 'bold'), padx=2, pady=6)
-        # lblNametablet.grid(row=1, column=0)
+        #dataframe down - responsável ================================
 
-        # comNametablet = ttk.Combobox(Dataframeleft, font=('times new roman',12),
-        #                              width=33)
-        # comNametablet.grid(row=1, column=1)
+        Lblprojectclient=Label(Dataframedown, font=('times new roman',12, 'bold'), text='Nome do projeto', padx=2, pady=6)
+        Lblprojectclient.grid(row=0, column=0, sticky=W)
+        textprojectclient=Entry(Dataframedown, font=('times new roman',12), width=35)
+        textprojectclient.grid(row=0, column=1)
+
+        Lbldataclient=Label(Dataframedown, font=('times new roman',12, 'bold'), text='Data/hora', padx=2, pady=6)
+        Lbldataclient.grid(row=0, column=7, sticky=W)
+        textdataclient=Entry(Dataframedown, font=('times new roman',12), width=35)
+        textdataclient.grid(row=0, column=8)
+
+        Lblrespclient=Label(Dataframedown, font=('times new roman',12, 'bold'), text='Responsável', padx=2, pady=6)
+        Lblrespclient.grid(row=1, column=0, sticky=W)
+        textrespclient=Entry(Dataframedown, font=('times new roman',12), width=35)
+        textrespclient.grid(row=1, column=1)
+
+        #dataframe inspe - inspeção ================================
+
+        lblNametablet = Label(Dataframeinpe, text='Estado da estrutura', font=('times new roman',12, 'bold'), padx=2, pady=6)
+        lblNametablet.grid(row=0, column=0)
+        comNametablet = ttk.Combobox(Dataframeinpe, font=('times new roman',12), width=13)
+        comNametablet['values'] = ('Conforme', 'Não conforme', 'N/A')
+        comNametablet.grid(row=0, column=1)
+
+        lbllimpetablet = Label(Dataframeinpe, text='Limpeza', font=('times new roman',12, 'bold'), padx=2, pady=6)
+        lbllimpetablet.grid(row=1, column=0)
+        comlimpetablet = ttk.Combobox(Dataframeinpe, font=('times new roman',12), width=13)
+        comlimpetablet['values'] = ('Conforme', 'Não conforme', 'N/A')
+        comlimpetablet.grid(row=1, column=1)
+
+        lblinstaltablet = Label(Dataframeinpe, text='Inst. Elétrica', font=('times new roman',12, 'bold'), padx=2, pady=6)
+        lblinstaltablet.grid(row=2, column=0)
+        cominstaltablet = ttk.Combobox(Dataframeinpe, font=('times new roman',12), width=13)
+        cominstaltablet['values'] = ('Conforme', 'Não conforme', 'N/A')
+        cominstaltablet.grid(row=2, column=1)
+
+        lbldocumentablet = Label(Dataframeinpe, text='Documentação', font=('times new roman',12, 'bold'), padx=2, pady=6)
+        lbldocumentablet.grid(row=3, column=0)
+        comdocumentablet = ttk.Combobox(Dataframeinpe, font=('times new roman',12), width=13)
+        comdocumentablet['values'] = ('Conforme', 'Não conforme', 'N/A')
+        comdocumentablet.grid(row=3, column=1)
+
+        lblepitablet = Label(Dataframeinpe, text='EPIs', font=('times new roman',12, 'bold'), padx=2, pady=6)
+        lblepitablet.grid(row=4, column=0)
+        comepitablet = ttk.Combobox(Dataframeinpe, font=('times new roman',12), width=13)
+        comepitablet['values'] = ('Conforme', 'Não conforme', 'N/A')
+        comepitablet.grid(row=4, column=1)
+
+        lblidenttablet = Label(Dataframeinpe, text='Ident. funcion.', font=('times new roman',12, 'bold'), padx=2, pady=6)
+        lblidenttablet.grid(row=0, column=3)
+        comidenttablet = ttk.Combobox(Dataframeinpe, font=('times new roman',12), width=13)
+        comidenttablet['values'] = ('Conforme', 'Não conforme', 'N/A')
+        comidenttablet.grid(row=0, column=4)
+
+        lblisolatablet = Label(Dataframeinpe, text='Isolação', font=('times new roman',12, 'bold'), padx=2, pady=6)
+        lblisolatablet.grid(row=1, column=3)
+        comisolatablet = ttk.Combobox(Dataframeinpe, font=('times new roman',12), width=13)
+        comisolatablet['values'] = ('Conforme', 'Não conforme', 'N/A')
+        comisolatablet.grid(row=1, column=4)
+
+        lblconectablet = Label(Dataframeinpe, text='Conexões', font=('times new roman',12, 'bold'), padx=2, pady=6)
+        lblconectablet.grid(row=2, column=3)
+        comconectablet = ttk.Combobox(Dataframeinpe, font=('times new roman',12), width=13)
+        comconectablet['values'] = ('Conforme', 'Não conforme', 'N/A')
+        comconectablet.grid(row=2, column=4)
+
+        lbldisjunttablet = Label(Dataframeinpe, text='Disjuntores', font=('times new roman',12, 'bold'), padx=2, pady=6)
+        lbldisjunttablet.grid(row=3, column=3)
+        comdisjunttablet = ttk.Combobox(Dataframeinpe, font=('times new roman',12), width=13)
+        comdisjunttablet['values'] = ('Conforme', 'Não conforme', 'N/A')
+        comdisjunttablet.grid(row=3, column=4)
+
+        lblaterratablet = Label(Dataframeinpe, text='Aterramento', font=('times new roman',12, 'bold'), padx=2, pady=6)
+        lblaterratablet.grid(row=4, column=3)
+        comaterratablet = ttk.Combobox(Dataframeinpe, font=('times new roman',12), width=13)
+        comaterratablet['values'] = ('Conforme', 'Não conforme', 'N/A')
+        comaterratablet.grid(row=4, column=4)
+
+        lblequipablet = Label(Dataframeinpe, text='Equipamentos', font=('times new roman',12, 'bold'), padx=2, pady=6)
+        lblequipablet.grid(row=0, column=6)
+        comequipablet = ttk.Combobox(Dataframeinpe, font=('times new roman',12), width=13)
+        comequipablet['values'] = ('Conforme', 'Não conforme', 'N/A')
+        comequipablet.grid(row=0, column=7)
 
 
 root = Tk()
