@@ -51,23 +51,26 @@ class Relatorio:
 
         #======================buttons ====================
 
-        btnpdf=Button(Buttonframe, text='PDF', bg='green', fg='white', font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
+        btnpdf=Button(Buttonframe, text='PDF', bg='green', fg='white', font=('times new roman',12, 'bold'), width=21, height=1, padx=2, pady=2)
         btnpdf.grid(row=0, column=0)
 
-        btnsair=Button(Buttonframe, text='Sair', bg='green', fg='white', font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
-        btnsair.grid(row=0, column=1)
+        btnpdf=Button(Buttonframe, text='Atualizar', bg='green', fg='white',command=self.atualizar_tela, font=('times new roman',12, 'bold'), width=21, height=1, padx=2, pady=2)
+        btnpdf.grid(row=0, column=1)
 
-        btndescri=Button(Buttonframe, text='Enviar', bg='green', fg='white', command=self.iDescricao, font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
-        btndescri.grid(row=0, column=2)
+        btnsair=Button(Buttonframe, text='Sair', bg='green', fg='white',command=self.iExit, font=('times new roman',12, 'bold'), width=21, height=1, padx=2, pady=2)
+        btnsair.grid(row=0, column=2)
 
-        btndescri=Button(Buttonframe, text='Modificar', bg='green', fg='white', command=self.update_data, font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
+        btndescri=Button(Buttonframe, text='Enviar', bg='green', fg='white', command=self.iDescricao, font=('times new roman',12, 'bold'), width=21, height=1, padx=2, pady=2)
         btndescri.grid(row=0, column=3)
 
-        btndelete=Button(Buttonframe, text='Deletar', bg='green', fg='white', command=self.idelete, font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
-        btndelete.grid(row=0, column=4)
+        btndescri=Button(Buttonframe, text='Modificar', bg='green', fg='white', command=self.update_data, font=('times new roman',12, 'bold'), width=21, height=1, padx=2, pady=2)
+        btndescri.grid(row=0, column=4)
 
-        btnlimpar=Button(Buttonframe, text='Limpar', bg='green', fg='white', font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
-        btnlimpar.grid(row=0, column=5)
+        btndelete=Button(Buttonframe, text='Deletar', bg='green', fg='white', command=self.idelete, font=('times new roman',12, 'bold'), width=21, height=1, padx=2, pady=2)
+        btndelete.grid(row=0, column=5)
+
+        btnlimpar=Button(Buttonframe, text='Limpar Tela', bg='green', fg='white',command=self.clear, font=('times new roman',12, 'bold'), width=21, height=1, padx=2, pady=2)
+        btnlimpar.grid(row=0, column=6)
 
         #=================details============
 
@@ -257,7 +260,27 @@ class Relatorio:
             messagebox.showinfo('Sucesso', 'Dados atualizados com sucesso')
         except mysql.connector.Error as err:
             messagebox.showerror('Error', f'Erro ao conectar com o banco de dados: {err}')
- 
+
+
+    def idelete(self):
+        try:
+            conn = mysql.connector.connect(
+                host='localhost',
+                user='root',
+                password='',
+                database='relatorio'
+            )
+            my_cursor = conn.cursor() 
+            query = 'DELETE FROM relatorio_eletrico WHERE Nomeprojeto=%s'
+            value = (self.Nomeprojeto.get(),)
+            my_cursor.execute(query, value)
+
+            conn.commit()
+            self.fetch_database()
+            conn.close()
+            messagebox.showinfo('Delete', 'Deletado com sucesso')
+        except mysql.connector.Error as err:
+            messagebox.showerror('Error', f'Erro ao excluir dados: {err}')
 
 
     def iDescricao(self):
@@ -314,23 +337,25 @@ class Relatorio:
         self.Telefone.set(row[3]),
         self.Cliente.set(row[4]),
         self.Data.set(row[5])
-    
-    def idelete():
-        conn = mysql.connector.connect(
-                host='localhost',
-                user='root',
-                password='',
-                database='relatorio'
-            )
-        my_cursor = conn.cursor() 
-        query='delete from relatorio_eletrico where Cliente=%s'
-        value=(self.Cliente.get(),)
-        my_cursor.execute(query, value)
 
-        conn.commit()
-        conn.close()
+    def clear(self):
+        self.Nomeprojeto.set('')
+        self.Responsavel.set('')
+        self.Email.set('')
+        self.Telefone.set('')
+        self.Cliente.set('')
+        self.Data.set('')
+    
+    def iExit(self):
+        iExit=messagebox.askyesno('Sistema de Relatório Elétrico', 'Confirme sua saída')
+        if iExit>0:
+            root.destroy()
+            return
+    
+    def atualizar_tela(self):
         self.fetch_database()
-        messagebox.showinfo('Delete', 'Deletado com sucesso')
+
+    
 
 
 
