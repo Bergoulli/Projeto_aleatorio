@@ -60,10 +60,10 @@ class Relatorio:
         btndescri=Button(Buttonframe, text='Enviar', bg='green', fg='white', command=self.iDescricao, font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
         btndescri.grid(row=0, column=2)
 
-        btndescri=Button(Buttonframe, text='Data de Descrip.', bg='green', fg='white', font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
+        btndescri=Button(Buttonframe, text='Modificar', bg='green', fg='white', command=self.update_data, font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
         btndescri.grid(row=0, column=3)
 
-        btndelete=Button(Buttonframe, text='Deletar', bg='green', fg='white', font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
+        btndelete=Button(Buttonframe, text='Deletar', bg='green', fg='white', command=self.idelete, font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
         btndelete.grid(row=0, column=4)
 
         btnlimpar=Button(Buttonframe, text='Limpar', bg='green', fg='white', font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
@@ -235,15 +235,29 @@ class Relatorio:
 
         #==================funcionando declaration ===============
 
-    def update(self):
-        conn = mysql.connector.connect(
-                    host='localhost',
-                    user='root',
-                    password='',
-                    database='relatorio'
-                )
-        my_cursor = conn.cursor()    
-        my_cursor.execute('UPDATE relatorio_tecnico set Nomeprojeto=%s, Responsavel=%s, Email=%s, Telefone=%s')    
+    def update_data(self):
+        try:
+            conn = mysql.connector.connect(
+                host='localhost',
+                user='root',
+                password='',
+                database='relatorio'
+            )
+            my_cursor = conn.cursor()    
+            my_cursor.execute('UPDATE relatorio_eletrico SET Nomeprojeto=%s, Responsavel=%s, Email=%s, Telefone=%s, Cliente=%s, Data=%s', (
+                self.Nomeprojeto.get(),
+                self.Responsavel.get(),
+                self.Email.get(),
+                self.Telefone.get(),
+                self.Cliente.get(),
+                self.Data.get()
+            ))
+            conn.commit()
+            conn.close()
+            messagebox.showinfo('Sucesso', 'Dados atualizados com sucesso')
+        except mysql.connector.Error as err:
+            messagebox.showerror('Error', f'Erro ao conectar com o banco de dados: {err}')
+ 
 
 
     def iDescricao(self):
@@ -300,6 +314,24 @@ class Relatorio:
         self.Telefone.set(row[3]),
         self.Cliente.set(row[4]),
         self.Data.set(row[5])
+    
+    def idelete():
+        conn = mysql.connector.connect(
+                host='localhost',
+                user='root',
+                password='',
+                database='relatorio'
+            )
+        my_cursor = conn.cursor() 
+        query='delete from relatorio_eletrico where Cliente=%s'
+        value=(self.Cliente.get(),)
+        my_cursor.execute(query, value)
+
+        conn.commit()
+        conn.close()
+        self.fetch_database()
+        messagebox.showinfo('Delete', 'Deletado com sucesso')
+
 
 
 
