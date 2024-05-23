@@ -229,26 +229,80 @@ class Relatorio:
         self.relatorio_table.column('Data', width=100)
 
         self.relatorio_table.pack(fill=BOTH, expand=1)
+        self.relatorio_table.bind('<ButtonRelease-1>', self.get_cursor)
+        self.fetch_database()
 
 
         #==================funcionando declaration ===============
 
+    def update(self):
+        conn = mysql.connector.connect(
+                    host='localhost',
+                    user='root',
+                    password='',
+                    database='relatorio'
+                )
+        my_cursor = conn.cursor()    
+        my_cursor.execute('UPDATE relatorio_tecnico set Nomeprojeto=%s, Responsavel=%s, Email=%s, Telefone=%s')    
+
+
     def iDescricao(self):
-        if self.Nomeprojeto.get()== '' or self.Cliente.get() == '' or self.Responsavel.get() =='':
-                messagebox.showerror('Error', 'Falta preencher alguma célula')
+        if self.Nomeprojeto.get() == '' or self.Cliente.get() == '' or self.Responsavel.get() == '':
+            messagebox.showerror('Error', 'Falta preencher alguma célula')
         else:
-            conn=mysql.connector.connect(host='localhost', user='root', password='', database='relatorio')
-            my_cursor=conn.cursor()
-            my_cursor.execute('INSERT into relatorio_eletrico values(%s,%s,%s,%s,%s,%s)', (
-                self.Nomeprojeto.get(),
-                self.Responsavel.get(),
-                self.Email.get(),
-                self.Telefone.get(),
-                self.Cliente.get(),
-                self.Data.get()
-            ))
+            try:
+                conn = mysql.connector.connect(
+                    host='localhost',
+                    user='root',  # Corrigido aqui
+                    password='',
+                    database='relatorio'
+                )
+                my_cursor = conn.cursor()
+                my_cursor.execute('INSERT into relatorio_eletrico values(%s, %s, %s, %s, %s, %s)', (
+                    self.Nomeprojeto.get(),
+                    self.Responsavel.get(),
+                    self.Email.get(),
+                    self.Telefone.get(),
+                    self.Cliente.get(),
+                    self.Data.get()
+                ))
+                conn.commit()
+                self.fetch_database()
+                conn.close()
+                messagebox.showinfo('Sucesso', 'Dados inseridos com sucesso')
+            except mysql.connector.Error as err:
+                messagebox.showerror('Error', f'Erro ao conectar com o banco de dados: {err}')
+
+    def fetch_database(self):
+        conn = mysql.connector.connect(
+                    host='localhost',
+                    user='root',
+                    password='',
+                    database='relatorio'
+                )
+        my_cursor = conn.cursor()
+        my_cursor.execute('SELECT * FROM relatorio_eletrico')
+        rows=my_cursor.fetchall()
+        if len(rows)!=0:
+            self.relatorio_table.delete(*self.relatorio_table.get_children())
+            for i in rows:
+                self.relatorio_table.insert("",END,values=i)
             conn.commit()
-            conn.close()
+        conn.close()
+    
+    def get_cursor(self, event=''):
+        cursor_row=self.relatorio_table.focus()
+        content=self.relatorio_table.item(cursor_row)
+        row=content['values']
+        self.Nomeprojeto.set(row[0])
+        self.Responsavel.set(row[1]),
+        self.Email.set(row[2]),
+        self.Telefone.set(row[3]),
+        self.Cliente.set(row[4]),
+        self.Data.set(row[5])
+
+
+
 
 root = Tk()
 ob = Relatorio(root)
