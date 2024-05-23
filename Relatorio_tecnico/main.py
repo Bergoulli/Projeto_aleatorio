@@ -57,7 +57,7 @@ class Relatorio:
         btnsair=Button(Buttonframe, text='Sair', bg='green', fg='white', font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
         btnsair.grid(row=0, column=1)
 
-        btndescri=Button(Buttonframe, text='Descrição', bg='green', fg='white', font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
+        btndescri=Button(Buttonframe, text='Enviar', bg='green', fg='white', command=self.iDescricao, font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
         btndescri.grid(row=0, column=2)
 
         btndescri=Button(Buttonframe, text='Data de Descrip.', bg='green', fg='white', font=('times new roman',12, 'bold'), width=23, height=1, padx=2, pady=2)
@@ -233,13 +233,23 @@ class Relatorio:
 
         #==================funcionando declaration ===============
 
-        def iDescricao(self):
-            if self.Nomeprojeto.get()== '' or self.Cliente.get() == '' or self.Responsavel.get() =='':
+    def iDescricao(self):
+        if self.Nomeprojeto.get()== '' or self.Cliente.get() == '' or self.Responsavel.get() =='':
                 messagebox.showerror('Error', 'Falta preencher alguma célula')
-            else:
-                conn=mysql.connector.connect(host='localhost', username='root', password='teste@123', database='Mydata')
-                my_cursor=conn.cursor()
-                
+        else:
+            conn=mysql.connector.connect(host='localhost', user='root', password='', database='relatorio')
+            my_cursor=conn.cursor()
+            my_cursor.execute('INSERT into relatorio_eletrico values(%s,%s,%s,%s,%s,%s)', (
+                self.Nomeprojeto.get(),
+                self.Responsavel.get(),
+                self.Email.get(),
+                self.Telefone.get(),
+                self.Cliente.get(),
+                self.Data.get()
+            ))
+            conn.commit()
+            conn.close()
+
 root = Tk()
 ob = Relatorio(root)
 root.mainloop()
