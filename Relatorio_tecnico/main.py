@@ -2,6 +2,12 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 import mysql.connector
+from fpdf import FPDF
+
+seu_host= 'localhost'
+seu_usuario= 'root'
+senha= ''
+nome_database= 'relatorio'
 
 class Relatorio:
     def __init__(self, root):
@@ -48,7 +54,7 @@ class Relatorio:
 
         #======================buttons ====================
 
-        btnpdf=Button(Buttonframe, text='PDF', bg='green', fg='white', font=('times new roman',12, 'bold'), width=21, height=1, padx=2, pady=2)
+        btnpdf=Button(Buttonframe, text='PDF', bg='green', fg='white',command=self.generate_pdf, font=('times new roman',12, 'bold'), width=21, height=1, padx=2, pady=2)
         btnpdf.grid(row=0, column=0)
 
         btnpdf=Button(Buttonframe, text='Atualizar', bg='green', fg='white',command=self.atualizar_tela, font=('times new roman',12, 'bold'), width=21, height=1, padx=2, pady=2)
@@ -238,10 +244,10 @@ class Relatorio:
     def update_data(self):
         try:
             conn = mysql.connector.connect(
-                host='localhost',
-                user='root',
-                password='',
-                database='relatorio'
+                host= seu_host,
+                user=seu_usuario, 
+                password= senha,
+                database= nome_database
             )
             my_cursor = conn.cursor()    
             my_cursor.execute('UPDATE relatorio_eletrico SET Nomeprojeto=%s, Responsavel=%s, Email=%s, Telefone=%s, Cliente=%s, Data=%s', (
@@ -262,10 +268,10 @@ class Relatorio:
     def idelete(self):
         try:
             conn = mysql.connector.connect(
-                host='localhost',
-                user='root',
-                password='',
-                database='relatorio'
+                host= seu_host,
+                user= seu_usuario, 
+                password= senha,
+                database= nome_database
             )
             my_cursor = conn.cursor() 
             query = 'DELETE FROM relatorio_eletrico WHERE Nomeprojeto=%s'
@@ -286,10 +292,10 @@ class Relatorio:
         else:
             try:
                 conn = mysql.connector.connect(
-                    host='localhost',
-                    user='root',  # Corrigido aqui
-                    password='',
-                    database='relatorio'
+                    host= seu_host,
+                    user= seu_usuario, 
+                    password= senha,
+                    database= nome_database
                 )
                 my_cursor = conn.cursor()
                 my_cursor.execute('INSERT into relatorio_eletrico values(%s, %s, %s, %s, %s, %s)', (
@@ -309,10 +315,10 @@ class Relatorio:
 
     def fetch_database(self):
         conn = mysql.connector.connect(
-                    host='localhost',
-                    user='root',
-                    password='',
-                    database='relatorio'
+                    host= seu_host,
+                    user= seu_usuario, 
+                    password= senha,
+                    database= nome_database
                 )
         my_cursor = conn.cursor()
         my_cursor.execute('SELECT * FROM relatorio_eletrico')
@@ -351,12 +357,50 @@ class Relatorio:
     
     def atualizar_tela(self):
         self.fetch_database()
-
     
+    def generate_pdf(self):
+        conn = mysql.connector.connect(
+                    host='localhost',
+                    user='root',
+                    password='',
+                    database='relatorio'
+                )
+        my_cursor = conn.cursor()
+        my_cursor.execute('SELECT * FROM relatorio_eletrico')
+        rows = my_cursor.fetchall()
+        conn.close()
 
+        if not rows:
+            messagebox.showerror('Erro', 'Não há dados para gerar o PDF')
+            return
 
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font('Arial', 'B', 12)
 
+        # Cabeçalhos
+        pdf.cell(40, 10, 'Nome do Projeto', 1)
+        pdf.cell(30, 10, 'Responsável', 1)
+        pdf.cell(30, 10, 'Cliente', 1)
+        pdf.cell(40, 10, 'Email', 1)
+        pdf.cell(30, 10, 'Telefone', 1)
+        pdf.cell(30, 10, 'Data', 1)
+        pdf.ln()
 
+        # Dados
+        pdf.set_font('Arial', '', 12)
+        for row in rows:
+            pdf.cell(40, 10, row[0], 1)
+            pdf.cell(30, 10, row[1], 1)
+            pdf.cell(30, 10, row[2], 1)
+            pdf.cell(40, 10, row[3], 1)
+            pdf.cell(30, 10, row[4], 1)
+            pdf.cell(30, 10, row[5], 1)
+            pdf.ln()
+
+        # Salva o PDF
+        pdf.output('relatorio_eletrico.pdf')
+        messagebox.showinfo('Sucesso', 'PDF gerado com sucesso')
 
 root = Tk()
 ob = Relatorio(root)
